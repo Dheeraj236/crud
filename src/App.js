@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useState, useEffect } from "react";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import "./App.css";
+import { Context } from "./Context";
+import Header from "./component/Header";
+import Users from "./component/Users";
+import CreateUser from "./component/CreateUser";
+import EditUser from "./component/EditUser";
+import Profile from "./component/Profile";
+import EditProfile from "./component/EditProfile";
 
 function App() {
+  const [users, setUsers] = useState([]);
+
+  // fucntion to get user data
+  let getUsers = async () => {
+    const { data } = await axios.get(
+      "https://611f263e9771bf001785c72a.mockapi.io/crud"
+    );
+    console.log(data);
+    setUsers(data);
+  };
+
+  useEffect(() => {
+    getUsers();
+    console.log("rendered");
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Context.Provider
+        value={{
+          users,
+          setUsers,
+        }}
+      >
+        <BrowserRouter>
+          <Header />
+          <Switch>
+            <Route exact path="/" component={Users} />
+            <Route path="/createuser" component={CreateUser} />
+            <Route path="/edituser/:id" component={EditUser} />
+            <Route path="/profile/:id" component={Profile} />
+            <Route path="/edit-profile/:id" component={EditProfile} />
+          </Switch>
+        </BrowserRouter>
+      </Context.Provider>
     </div>
   );
 }
