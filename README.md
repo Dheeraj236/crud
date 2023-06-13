@@ -1,2 +1,2 @@
 ## React-CRUD
-application using CFRUD operations
+application using CRUD operations
